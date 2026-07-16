@@ -1,0 +1,21 @@
+{
+  "name": "gym-timer",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "node scripts/build.mjs",
+    "preview": "vite preview",
+    "generate-pwa-assets": "pwa-assets-generator"
+  },
+  "devDependencies": {
+    "@vite-pwa/assets-generator": "^0.2.6",
+    "vite": "^6.0.0",
+    "vite-plugin-pwa": "^0.21.1"
+  },
+  "allowScripts": {
+    "esbuild@0.25.12": true,
+    "sharp@0.32.6": true
+  }
+}
