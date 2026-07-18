@@ -1,23 +1,16 @@
 import { getState, setState, startSession } from '../state.js';
-import { PROGRAM_IDS, getProgramMeta, resolveExercises } from '../programs.js';
+import { PROGRAM_IDS, LEVELS, getProgramMeta, resolveExercises } from '../programs.js';
 import { navigate } from '../router.js';
 import { bottomNavHTML, bindBottomNav } from '../components/bottomNav.js';
 
 const MODES = ['Salle', 'Maison', 'PDC'];
 
-function equipmentForMode(state, mode) {
-  if (mode === 'Maison') return state.equipmentMaison;
-  if (mode === 'PDC') return state.equipmentPdc;
-  return null;
-}
-
 export default function renderHome(root) {
   const state = getState();
-  const equipment = equipmentForMode(state, state.mode);
 
   const programs = PROGRAM_IDS.map((id) => {
     const meta = getProgramMeta(id);
-    const count = resolveExercises(state.mode, id, equipment).length;
+    const count = resolveExercises(state.mode, id, state.level).length;
     return { id, ...meta, count };
   });
 
@@ -30,6 +23,9 @@ export default function renderHome(root) {
         </div>
         <div class="tabs">
           ${MODES.map((m) => `<button class="tab ${m === state.mode ? 'active' : ''}" data-mode="${m}">${m}</button>`).join('')}
+        </div>
+        <div class="tabs">
+          ${LEVELS.map((l) => `<button class="tab ${l.id === state.level ? 'active' : ''}" data-level="${l.id}">${l.label}</button>`).join('')}
         </div>
         <div class="card-list">
           ${programs
@@ -62,17 +58,20 @@ export default function renderHome(root) {
     });
   });
 
+  root.querySelectorAll('[data-level]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      setState({ level: btn.dataset.level });
+      renderHome(root);
+    });
+  });
+
   root.querySelectorAll('[data-program]').forEach((btn) => {
     btn.addEventListener('click', () => {
       const programId = btn.dataset.program;
       const current = getState();
-      if (current.mode === 'Salle') {
-        startSession(programId, 'Salle', resolveExercises('Salle', programId, null));
-        navigate('/workout');
-      } else {
-        setState({ pendingProgramId: programId, pendingMode: current.mode });
-        navigate('/equipment');
-      }
+      const exercises = resolveExercises(current.mode, programId, current.level);
+      startSession(programId, current.mode, exercises);
+      navigate('/workout');
     });
   });
 

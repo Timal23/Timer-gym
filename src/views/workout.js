@@ -33,6 +33,7 @@ export default function renderWorkout(root) {
         <div>
           <span class="muscle-badge">${exercise.muscle}</span>
           <div class="headline headline--sm" style="margin-top:10px">${exercise.name}</div>
+          ${exercise.note ? `<div class="subtext">${exercise.note}</div>` : ''}
         </div>
         <div class="set-panel">
           <div class="label">Série</div>
@@ -62,7 +63,7 @@ export default function renderWorkout(root) {
   `;
 
   root.querySelector('#quit').addEventListener('click', () => {
-    setState((s) => ({ ...s, session: null, pendingProgramId: null }));
+    setState((s) => ({ ...s, session: null }));
     navigate('/');
   });
 
@@ -104,7 +105,6 @@ function completeSet(session, exercises, exercise) {
     setState((s) => ({
       ...s,
       session: null,
-      pendingProgramId: null,
       lastSummary: { durationMs, sets: setsCompletedTotal, streak }
     }));
     navigate('/summary');

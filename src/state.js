@@ -4,20 +4,7 @@ const DEFAULT_WEIGHT = 20;
 function defaultState() {
   return {
     mode: 'Salle',
-    equipmentMaison: {
-      Haltères: true,
-      Barre: false,
-      'Barre EZ': false,
-      'Barre de traction': true,
-      Kettlebell: false,
-      'Chaise romaine': false
-    },
-    equipmentPdc: {
-      'Barre de traction': false,
-      'Barres parallèles': false
-    },
-    pendingProgramId: null,
-    pendingMode: null,
+    level: 'int',
     session: null,
     lastSummary: null,
     history: {
@@ -36,8 +23,6 @@ function load() {
     return {
       ...base,
       ...parsed,
-      equipmentMaison: { ...base.equipmentMaison, ...(parsed.equipmentMaison || {}) },
-      equipmentPdc: { ...base.equipmentPdc, ...(parsed.equipmentPdc || {}) },
       history: { ...base.history, ...(parsed.history || {}) }
     };
   } catch {
