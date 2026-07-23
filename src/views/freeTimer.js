@@ -28,9 +28,11 @@ export default function renderFreeTimer(root) {
         </div>
         <div class="free-clock-wrap">
           <div class="timer-clock" id="clock">${fmt(duration)}</div>
-          <div style="display:flex;gap:14px">
-            <button class="circle-btn" id="minus">−</button>
-            <button class="circle-btn" id="plus">+</button>
+          <div style="display:flex;gap:10px" id="adjust">
+            <button class="circle-btn wide" data-delta="-15">−15</button>
+            <button class="circle-btn" data-delta="-5">−</button>
+            <button class="circle-btn" data-delta="5">+</button>
+            <button class="circle-btn wide" data-delta="15">+15</button>
           </div>
           <div class="round-badge" id="rounds">Séries : ${rounds}</div>
         </div>
@@ -43,8 +45,7 @@ export default function renderFreeTimer(root) {
   const roundsEl = root.querySelector('#rounds');
   const goBtn = root.querySelector('#go');
   const presetsWrap = root.querySelector('#presets');
-  const minusBtn = root.querySelector('#minus');
-  const plusBtn = root.querySelector('#plus');
+  const adjustWrap = root.querySelector('#adjust');
 
   root.querySelector('#back').addEventListener('click', () => {
     stopTimer();
@@ -62,19 +63,20 @@ export default function renderFreeTimer(root) {
     });
   });
 
-  minusBtn.addEventListener('click', () => {
-    if (running) return;
-    duration = Math.max(5, duration - 5);
-    clockEl.textContent = fmt(duration);
-    presetsWrap.querySelectorAll('.preset-chip').forEach((c) => c.classList.remove('active'));
+  adjustWrap.querySelectorAll('[data-delta]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (running) return;
+      duration = Math.max(5, duration + parseInt(btn.dataset.delta, 10));
+      clockEl.textContent = fmt(duration);
+      presetsWrap.querySelectorAll('.preset-chip').forEach((c) => c.classList.remove('active'));
+    });
   });
 
-  plusBtn.addEventListener('click', () => {
-    if (running) return;
-    duration += 5;
-    clockEl.textContent = fmt(duration);
-    presetsWrap.querySelectorAll('.preset-chip').forEach((c) => c.classList.remove('active'));
-  });
+  function setIdleButton(label) {
+    goBtn.textContent = label;
+    goBtn.classList.remove('btn-dark');
+    goBtn.classList.add('btn-primary');
+  }
 
   function startRound() {
     timer = new Timer({
@@ -84,7 +86,10 @@ export default function renderFreeTimer(root) {
       onComplete: () => {
         rounds += 1;
         roundsEl.textContent = `Séries : ${rounds}`;
-        if (running) startRound();
+        running = false;
+        timer = null;
+        setIdleButton('Série suivante ▸');
+        clockEl.textContent = fmt(duration);
       }
     });
     timer.start(duration);
@@ -93,9 +98,10 @@ export default function renderFreeTimer(root) {
   function stopTimer() {
     running = false;
     if (timer) timer.stop();
-    goBtn.textContent = 'GO ▸';
-    goBtn.classList.remove('btn-dark');
-    goBtn.classList.add('btn-primary');
+    timer = null;
+    rounds = 0;
+    roundsEl.textContent = `Séries : ${rounds}`;
+    setIdleButton('GO ▸');
     clockEl.textContent = fmt(duration);
   }
 
@@ -105,8 +111,6 @@ export default function renderFreeTimer(root) {
       return;
     }
     running = true;
-    rounds = 0;
-    roundsEl.textContent = `Séries : ${rounds}`;
     goBtn.textContent = 'Arrêter ■';
     goBtn.classList.remove('btn-primary');
     goBtn.classList.add('btn-dark');

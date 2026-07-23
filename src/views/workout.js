@@ -1,8 +1,19 @@
 import { getState, setState, recordWorkoutCompleted, getSessionWeight, setSessionWeight } from '../state.js';
 import { getProgramMeta } from '../programs.js';
 import { navigate } from '../router.js';
+import { Timer, fmt } from '../timer.js';
+
+let holdTimer = null;
+
+function stopHoldTimer() {
+  if (holdTimer) {
+    holdTimer.stop();
+    holdTimer = null;
+  }
+}
 
 export default function renderWorkout(root) {
+  stopHoldTimer();
   const state = getState();
   const session = state.session;
   if (!session) {
@@ -39,6 +50,14 @@ export default function renderWorkout(root) {
           <div class="label">Série</div>
           <div class="value">${session.setIndex}/${exercise.sets}</div>
         </div>
+        ${exercise.hold ? `
+        <div class="hold-panel">
+          <div class="label">Maintien · objectif ${exercise.reps === '—' ? fmt(exercise.hold) : exercise.reps}</div>
+          <div class="timer-clock timer-clock--sm" id="holdClock">${fmt(exercise.hold)}</div>
+          <div class="progress-track"><div class="progress-fill" id="holdFill" style="width:0%"></div></div>
+          <button class="btn btn-dark" id="holdBtn" style="margin-top:12px">Démarrer le maintien ▸</button>
+        </div>
+        ` : `
         <div class="btn-row">
           <div class="stat-tile">
             <div class="label">Reps cible</div>
@@ -53,6 +72,7 @@ export default function renderWorkout(root) {
             </div>
           </div>
         </div>
+        `}
         <div class="btn-row" style="margin-top:auto">
           <button class="btn-square" id="prev" ${session.exerciseIndex === 0 ? 'disabled' : ''}>‹</button>
           <button class="btn btn-dark" id="done">Série faite ✓</button>
@@ -75,6 +95,48 @@ export default function renderWorkout(root) {
     });
   });
 
+  if (exercise.hold) {
+    const holdClock = root.querySelector('#holdClock');
+    const holdFill = root.querySelector('#holdFill');
+    const holdBtn = root.querySelector('#holdBtn');
+    let holdRunning = false;
+
+    const resetHold = () => {
+      holdRunning = false;
+      holdClock.textContent = fmt(exercise.hold);
+      holdClock.classList.remove('warn');
+      holdFill.style.width = '0%';
+      holdBtn.textContent = 'Démarrer le maintien ▸';
+    };
+
+    holdBtn.addEventListener('click', () => {
+      if (holdRunning) {
+        stopHoldTimer();
+        resetHold();
+        return;
+      }
+      holdRunning = true;
+      holdBtn.textContent = 'Stop ■';
+      holdTimer = new Timer({
+        onTick: (remaining) => {
+          holdClock.textContent = fmt(remaining);
+          const total = exercise.hold || 1;
+          holdFill.style.width = `${Math.min(100, ((total - remaining) / total) * 100)}%`;
+          holdClock.classList.toggle('warn', remaining <= 5 && remaining > 0);
+        },
+        onComplete: () => {
+          holdRunning = false;
+          holdTimer = null;
+          holdClock.textContent = 'Terminé';
+          holdClock.classList.remove('warn');
+          holdFill.style.width = '100%';
+          holdBtn.textContent = 'Refaire ↻';
+        }
+      });
+      holdTimer.start(exercise.hold);
+    });
+  }
+
   const prevBtn = root.querySelector('#prev');
   if (!prevBtn.disabled) {
     prevBtn.addEventListener('click', () => {
@@ -91,7 +153,12 @@ export default function renderWorkout(root) {
     });
   }
 
-  root.querySelector('#done').addEventListener('click', () => completeSet(session, exercises, exercise));
+  root.querySelector('#done').addEventListener('click', () => {
+    stopHoldTimer();
+    completeSet(session, exercises, exercise);
+  });
+
+  return () => stopHoldTimer();
 }
 
 function completeSet(session, exercises, exercise) {

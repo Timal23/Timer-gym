@@ -38,21 +38,20 @@ const ex = (name, sets, r, type, note = null) => ({ name, sets, rest: r, type, n
 
 export const WARMUPS = {
   push: [
-    "5 min cardio léger (rameur/vélo)",
+    'Mobilité articulaire : cercles épaules, coudes, poignets ×10 chacun',
     "Rotations d'épaules + band pull-aparts (ou bras à vide) ×20",
     '10 pompes lentes',
     '2 séries d\'approche montantes sur le 1er développé (barre à vide → ~50% → ~70%)'
   ],
   pull: [
-    '5 min cardio léger',
+    'Mobilité articulaire : cercles épaules, coudes, poignets, cou ×10',
     'Dislocations d\'épaule au bâton/serviette ×10',
     'Face pulls légers ou band pull-aparts ×20',
     'Suspension passive à la barre 20 s',
     '2 séries d\'approche sur le 1er tirage/rowing'
   ],
   legs: [
-    '5 min cardio léger',
-    'Rotations hanches + chevilles',
+    'Mobilité articulaire : cercles hanches, genoux, chevilles ×10 chacun',
     '15 squats au poids du corps + good-morning à vide ×10',
     'Fentes dynamiques ×10/jambe',
     '2-3 séries d\'approche montantes sur le 1er gros exo'
@@ -330,7 +329,7 @@ export function getProgramMeta(programId) {
 }
 
 function toWarmupExercise(text) {
-  return { name: text, muscle: 'Échauffement', sets: 1, reps: '—', rest: 20, note: null };
+  return { name: text, muscle: 'Échauffement', sets: 1, reps: '—', rest: 20, note: null, hold: parseHold(text) };
 }
 
 /** Découpe une chaîne "4 × 6-8/jambe" en { sets: 4, reps: "6-8/jambe" }. */
@@ -338,6 +337,17 @@ function parseSets(raw) {
   const match = /^(\d+)\s*×\s*(.+)$/.exec(raw.trim());
   if (!match) return { sets: 3, reps: raw.trim() };
   return { sets: parseInt(match[1], 10), reps: match[2].trim() };
+}
+
+/**
+ * Détecte un maintien chronométré ("30-60 s", "45 s/côté", "20 s") et renvoie
+ * la durée cible en secondes (borne haute d'une fourchette), sinon null.
+ */
+function parseHold(text) {
+  if (!text) return null;
+  const m = /(\d+)(?:\s*[-–]\s*(\d+))?\s*s(?:ec)?\b/i.exec(text);
+  if (!m) return null;
+  return parseInt(m[2] || m[1], 10);
 }
 
 function toWorkoutExercise(raw, muscle) {
@@ -348,7 +358,8 @@ function toWorkoutExercise(raw, muscle) {
     sets,
     reps,
     rest: raw.rest.sec,
-    note: raw.note
+    note: raw.note,
+    hold: parseHold(reps)
   };
 }
 
