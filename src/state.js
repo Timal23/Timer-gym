@@ -5,11 +5,24 @@ function systemPrefersDark() {
   return typeof matchMedia === 'function' && matchMedia('(prefers-color-scheme: dark)').matches;
 }
 
+function defaultProfile() {
+  return {
+    name: '',
+    bodyweight: null, // kg
+    height: null, // cm
+    age: null,
+    sex: '', // 'homme' | 'femme' | 'autre'
+    goal: '', // 'force' | 'hypertrophie' | 'seche'
+    oneRM: {} // { [exerciseName]: kg }
+  };
+}
+
 function defaultState() {
   return {
     mode: 'Salle',
     level: 'int',
     theme: systemPrefersDark() ? 'dark' : 'light',
+    profile: defaultProfile(),
     session: null,
     lastSummary: null,
     history: {
@@ -28,7 +41,12 @@ function load() {
     return {
       ...base,
       ...parsed,
-      history: { ...base.history, ...(parsed.history || {}) }
+      history: { ...base.history, ...(parsed.history || {}) },
+      profile: {
+        ...base.profile,
+        ...(parsed.profile || {}),
+        oneRM: { ...base.profile.oneRM, ...(parsed.profile?.oneRM || {}) }
+      }
     };
   } catch {
     return base;
@@ -99,6 +117,25 @@ export function startSession(programId, mode, exercises) {
       nextSetIndex: null
     }
   }));
+}
+
+export function setProfile(patch) {
+  setState((s) => ({ ...s, profile: { ...s.profile, ...patch } }));
+}
+
+export function getOneRM(name) {
+  return state.profile?.oneRM?.[name] ?? null;
+}
+
+/** Enregistre (ou supprime, si valeur vide/nulle) le 1RM d'un exercice. */
+export function setOneRM(name, kg) {
+  const value = kg == null || kg === '' ? null : Number(kg);
+  setState((s) => {
+    const oneRM = { ...s.profile.oneRM };
+    if (value == null || Number.isNaN(value) || value <= 0) delete oneRM[name];
+    else oneRM[name] = value;
+    return { ...s, profile: { ...s.profile, oneRM } };
+  });
 }
 
 export function getSessionWeight(exerciseIndex) {

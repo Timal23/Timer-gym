@@ -29,6 +29,7 @@ export function bindBottomNav(root) {
       const key = btn.dataset.nav;
       if (key === 'home') navigate('/');
       else if (key === 'timer') navigate('/free');
+      else if (key === 'profil') navigate('/profile');
       else showToast('Bientôt disponible');
     });
   });

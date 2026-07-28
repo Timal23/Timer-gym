@@ -1,7 +1,8 @@
-import { getState, setState, recordWorkoutCompleted, getSessionWeight, setSessionWeight } from '../state.js';
+import { getState, setState, recordWorkoutCompleted, getSessionWeight, setSessionWeight, getOneRM, setOneRM } from '../state.js';
 import { getProgramMeta } from '../programs.js';
 import { navigate } from '../router.js';
 import { Timer, fmt } from '../timer.js';
+import { suggestedWeight, parseTargetReps, fmtKg } from '../oneRm.js';
 
 let holdTimer = null;
 
@@ -24,7 +25,16 @@ export default function renderWorkout(root) {
   const meta = getProgramMeta(session.programId);
   const exercises = session.exercises;
   const exercise = exercises[session.exerciseIndex];
-  const weight = getSessionWeight(session.exerciseIndex);
+
+  // Poids conseillé à partir du 1RM enregistré pour cet exercice (si présent).
+  const oneRM = getOneRM(exercise.name);
+  const targetReps = parseTargetReps(exercise.reps);
+  const suggested = suggestedWeight(oneRM, exercise.reps);
+  const storedWeight = session.weights?.[session.exerciseIndex];
+  // Si l'utilisateur n'a pas encore ajusté la charge, on pré-remplit avec le conseil.
+  const weight = storedWeight != null ? storedWeight : (suggested != null ? suggested : getSessionWeight(session.exerciseIndex));
+  // Le coaching de charge n'a de sens que pour un exercice chargé (ni maintien, ni échauffement).
+  const showCoach = !exercise.hold && exercise.muscle !== 'Échauffement';
 
   const dots = exercises
     .map((_, i) => `<span class="${i <= session.exerciseIndex ? 'done' : ''}"></span>`)
@@ -76,6 +86,23 @@ export default function renderWorkout(root) {
             </div>
           </div>
         </div>
+        ${showCoach ? `
+        <div class="coach">
+          ${suggested != null ? `
+          <div class="coach-hint">
+            <span class="lbl">💡 Poids conseillé${targetReps ? ` · ${targetReps} reps` : ''}</span>
+            <span class="coach-val">${fmtKg(suggested)} kg</span>
+          </div>
+          <div class="coach-sub">Estimé d'après ton 1RM de ${fmtKg(oneRM)} kg · <button class="linkbtn" data-toggle-1rm>modifier</button></div>
+          ` : `
+          <button class="coach-add" data-toggle-1rm>➕ Définir mon 1RM pour un poids conseillé</button>
+          `}
+          <form class="onerm-form" data-1rm-form hidden>
+            <input class="text-input" type="number" inputmode="decimal" step="2.5" min="0" placeholder="Ton 1RM sur cet exo (kg)" value="${oneRM ?? ''}" data-1rm-input />
+            <button class="btn-square" type="submit" aria-label="Enregistrer le 1RM">✓</button>
+          </form>
+        </div>
+        ` : ''}
         `}
         <div class="btn-row" style="margin-top:auto">
           <button class="btn-square" id="prev" ${session.exerciseIndex === 0 ? 'disabled' : ''}>‹</button>
@@ -98,6 +125,21 @@ export default function renderWorkout(root) {
       renderWorkout(root);
     });
   });
+
+  const oneRmForm = root.querySelector('[data-1rm-form]');
+  root.querySelectorAll('[data-toggle-1rm]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      oneRmForm.hidden = !oneRmForm.hidden;
+      if (!oneRmForm.hidden) oneRmForm.querySelector('[data-1rm-input]').focus();
+    });
+  });
+  if (oneRmForm) {
+    oneRmForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      setOneRM(exercise.name, oneRmForm.querySelector('[data-1rm-input]').value);
+      renderWorkout(root);
+    });
+  }
 
   if (exercise.hold) {
     const holdClock = root.querySelector('#holdClock');

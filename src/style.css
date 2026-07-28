@@ -693,3 +693,177 @@ button {
 .toast.show {
   opacity: 1;
 }
+
+/* Profil */
+.form-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.field-row {
+  display: flex;
+  gap: 10px;
+}
+
+.field-row .field {
+  flex: 1;
+  min-width: 0;
+}
+
+.field > label {
+  font: 800 11px var(--font-body);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.text-input {
+  width: 100%;
+  background: var(--surface);
+  color: var(--ink);
+  border: var(--bw) solid var(--ink);
+  border-radius: var(--r-md);
+  padding: 13px 15px;
+  font: 700 16px var(--font-body);
+}
+
+.text-input::placeholder {
+  color: var(--ink);
+  opacity: 0.35;
+}
+
+.text-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.onerm-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.onerm-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface);
+  border: var(--bw) solid var(--ink);
+  border-radius: var(--r-md);
+  padding: 8px 12px;
+}
+
+.onerm-row .nm {
+  flex: 1;
+  min-width: 0;
+  font: 700 13px var(--font-body);
+}
+
+.onerm-row .onerm-input {
+  width: 82px;
+  flex: none;
+  padding: 8px 10px;
+  text-align: right;
+  border-width: 2px;
+}
+
+.onerm-row .unit {
+  font: 800 11px var(--font-body);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.onerm-row .onerm-del {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Coaching de charge (écran d'exercice) */
+.coach {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.coach-hint {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--surface);
+  border: var(--bw) solid var(--accent);
+  border-radius: var(--r-md);
+  padding: 12px 16px;
+}
+
+.coach-hint .lbl {
+  font: 800 12px var(--font-body);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.coach-val {
+  font-family: var(--font-display);
+  font-size: 26px;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.coach-sub {
+  font: 600 12px var(--font-body);
+  opacity: 0.85;
+}
+
+.coach-add {
+  width: 100%;
+  background: transparent;
+  border: var(--bw) dashed var(--ink);
+  border-radius: var(--r-md);
+  padding: 13px;
+  font: 800 12px var(--font-body);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: inherit;
+  cursor: pointer;
+}
+
+.linkbtn {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 800;
+  color: var(--accent);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.onerm-form {
+  display: flex;
+  gap: 8px;
+}
+
+.onerm-form .text-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.onerm-form .btn-square {
+  height: auto;
+  font-size: 24px;
+}
