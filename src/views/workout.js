@@ -50,6 +50,10 @@ export default function renderWorkout(root) {
           <div class="label">Série</div>
           <div class="value">${session.setIndex}/${exercise.sets}</div>
         </div>
+        <div class="rest-line">
+          <span class="label">Repos entre séries</span>
+          <span class="value">${exercise.restLabel || fmt(exercise.rest)}</span>
+        </div>
         ${exercise.hold ? `
         <div class="hold-panel">
           <div class="label">Maintien · objectif ${exercise.reps === '—' ? fmt(exercise.hold) : exercise.reps}</div>

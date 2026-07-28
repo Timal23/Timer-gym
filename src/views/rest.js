@@ -18,17 +18,11 @@ export default function renderRest(root) {
         <div class="eyebrow eyebrow--onaccent" style="letter-spacing:3px;margin-top:14px">Repos 🔥</div>
         <div class="timer-clock" id="clock">${fmt(session.restDuration)}</div>
         <div class="progress-track"><div class="progress-fill" id="fill" style="width:0%"></div></div>
-        <div class="adjust-row">
-          <button class="adjust-chip" data-delta="-15">−15</button>
-          <button class="adjust-chip" data-delta="-5">−5</button>
-          <button class="adjust-chip" data-delta="5">+5</button>
-          <button class="adjust-chip" data-delta="15">+15</button>
-        </div>
         <div class="next-set-card">
           <div class="label">Prochaine série</div>
           <div class="value">Série ${session.nextSetIndex}/${nextExercise.sets} · ${nextExercise.name}</div>
         </div>
-        <button class="btn" style="margin-top:14px;background:#fff;color:#0a0a0a" id="skip">Passer ▸</button>
+        <button class="btn" style="margin-top:14px;background:var(--surface);color:var(--ink)" id="skip">Passer ▸</button>
       </div>
     </div>
   `;
@@ -63,12 +57,6 @@ export default function renderRest(root) {
     }));
     navigate('/workout');
   }
-
-  root.querySelectorAll('[data-delta]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      timer.addSeconds(parseInt(btn.dataset.delta, 10));
-    });
-  });
 
   root.querySelector('#skip').addEventListener('click', advance);
 

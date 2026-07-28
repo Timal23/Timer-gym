@@ -37,7 +37,7 @@ export default function renderSummary(root) {
         </div>
         <div style="margin-top:20px;display:flex;flex-direction:column;gap:12px">
           <button class="btn btn-primary" id="home">Retour accueil</button>
-          <button class="btn btn-ghost" id="recap" style="border-color:var(--bg)">Récap détaillé</button>
+          <button class="btn btn-ghost" id="recap" style="border-color:var(--on-fill)">Récap détaillé</button>
         </div>
       </div>
     </div>

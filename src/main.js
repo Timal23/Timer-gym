@@ -1,4 +1,5 @@
 import './style.css';
+import { applyTheme } from './state.js';
 import { registerRoute, startRouter } from './router.js';
 import renderHome from './views/home.js';
 import renderWorkout from './views/workout.js';
@@ -12,4 +13,5 @@ registerRoute('/rest', renderRest);
 registerRoute('/free', renderFreeTimer);
 registerRoute('/summary', renderSummary);
 
+applyTheme();
 startRouter();

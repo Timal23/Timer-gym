@@ -329,7 +329,7 @@ export function getProgramMeta(programId) {
 }
 
 function toWarmupExercise(text) {
-  return { name: text, muscle: 'Échauffement', sets: 1, reps: '—', rest: 20, note: null, hold: parseHold(text) };
+  return { name: text, muscle: 'Échauffement', sets: 1, reps: '—', rest: 20, restLabel: '20 s', note: null, hold: parseHold(text) };
 }
 
 /** Découpe une chaîne "4 × 6-8/jambe" en { sets: 4, reps: "6-8/jambe" }. */
@@ -358,6 +358,7 @@ function toWorkoutExercise(raw, muscle) {
     sets,
     reps,
     rest: raw.rest.sec,
+    restLabel: raw.rest.label,
     note: raw.note,
     hold: parseHold(reps)
   };

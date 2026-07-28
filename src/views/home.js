@@ -1,4 +1,4 @@
-import { getState, setState, startSession } from '../state.js';
+import { getState, setState, startSession, toggleTheme } from '../state.js';
 import { PROGRAM_IDS, LEVELS, getProgramMeta, resolveExercises } from '../programs.js';
 import { navigate } from '../router.js';
 import { bottomNavHTML, bindBottomNav } from '../components/bottomNav.js';
@@ -14,8 +14,14 @@ export default function renderHome(root) {
     return { id, ...meta, count };
   });
 
+  const isDark = state.theme === 'dark';
+
   root.innerHTML = `
     <div class="screen">
+      <div class="screen-header">
+        <span class="screen-title">Gym Timer</span>
+        <button class="pill-btn" id="theme" aria-label="${isDark ? 'Passer en mode clair' : 'Passer en mode sombre'}">${isDark ? '☀️ Clair' : '🌙 Sombre'}</button>
+      </div>
       <div class="screen-body">
         <div>
           <div class="eyebrow">Prêt à charger</div>
@@ -50,6 +56,11 @@ export default function renderHome(root) {
       ${bottomNavHTML('home')}
     </div>
   `;
+
+  root.querySelector('#theme').addEventListener('click', () => {
+    toggleTheme();
+    renderHome(root);
+  });
 
   root.querySelectorAll('[data-mode]').forEach((btn) => {
     btn.addEventListener('click', () => {

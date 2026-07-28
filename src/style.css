@@ -3,12 +3,31 @@
   --ink: #0a0a0a;
   --accent: #2e5bff;
   --white: #ffffff;
+  /* Semantic surfaces so the theme can flip without touching every rule.
+     In light mode these equal the original hard-coded values, so the light
+     look is unchanged. */
+  --surface: #ffffff;   /* card / neutral-button background */
+  --fill: #0a0a0a;      /* intentionally-dark fill (badge, toast, dark btn, inverted screen) */
+  --on-fill: #ffffff;   /* text/border on top of --fill */
   --bw: 3px;
   --r-lg: 16px;
   --r-md: 14px;
   --r-sm: 10px;
   --font-display: 'Anton', sans-serif;
   --font-body: 'Archivo', system-ui, -apple-system, sans-serif;
+}
+
+:root[data-theme='dark'] {
+  --bg: #14130f;
+  --ink: #f1ece1;
+  --accent: #4f74ff;
+  --surface: #211f19;
+  --fill: #2b2922;
+  --on-fill: #f1ece1;
+}
+
+html {
+  color-scheme: light dark;
 }
 
 * {
@@ -46,8 +65,8 @@ button {
 }
 
 .screen--dark {
-  background: var(--ink);
-  color: var(--bg);
+  background: var(--fill);
+  color: var(--on-fill);
 }
 
 .screen--accent {
@@ -159,7 +178,7 @@ button {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  background: var(--white);
+  background: var(--surface);
   border: var(--bw) solid var(--ink);
   border-radius: var(--r-lg);
   padding: 18px 20px;
@@ -272,7 +291,7 @@ button {
   letter-spacing: 0.5px;
   cursor: pointer;
   width: 100%;
-  background: var(--white);
+  background: var(--surface);
   color: var(--ink);
 }
 
@@ -282,8 +301,8 @@ button {
 }
 
 .btn-dark {
-  background: var(--ink);
-  color: var(--white);
+  background: var(--fill);
+  color: var(--on-fill);
 }
 
 .btn-outline {
@@ -305,7 +324,7 @@ button {
 .btn-square {
   width: 60px;
   flex: none;
-  background: var(--white);
+  background: var(--surface);
   border: var(--bw) solid var(--ink);
   border-radius: var(--r-md);
   font-family: var(--font-display);
@@ -331,7 +350,7 @@ button {
 .dot-track span {
   flex: 1;
   height: 9px;
-  background: var(--white);
+  background: var(--surface);
   border: 2px solid var(--ink);
   border-radius: 3px;
 }
@@ -345,8 +364,8 @@ button {
   font: 800 11px var(--font-body);
   letter-spacing: 1px;
   text-transform: uppercase;
-  background: var(--ink);
-  color: var(--white);
+  background: var(--fill);
+  color: var(--on-fill);
   border-radius: 5px;
   padding: 4px 9px;
 }
@@ -372,9 +391,33 @@ button {
   line-height: 0.9;
 }
 
+.rest-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--surface);
+  border: var(--bw) solid var(--ink);
+  border-radius: var(--r-md);
+  padding: 12px 18px;
+}
+
+.rest-line .label {
+  font: 800 12px var(--font-body);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.rest-line .value {
+  font-family: var(--font-display);
+  font-size: 24px;
+  line-height: 1;
+  color: var(--accent);
+}
+
 .stat-tile {
   flex: 1;
-  background: var(--white);
+  background: var(--surface);
   border: var(--bw) solid var(--ink);
   border-radius: var(--r-md);
   padding: 14px 0;
@@ -395,7 +438,7 @@ button {
 
 .load-tile {
   flex: 1;
-  background: var(--white);
+  background: var(--surface);
   border: var(--bw) solid var(--ink);
   border-radius: var(--r-md);
   padding: 10px 12px;
@@ -429,7 +472,7 @@ button {
   font-family: var(--font-display);
   font-size: 18px;
   cursor: pointer;
-  background: var(--white);
+  background: var(--surface);
 }
 
 .load-tile .value {
@@ -492,25 +535,6 @@ button {
 .progress-fill {
   height: 100%;
   background: currentColor;
-}
-
-.adjust-row {
-  display: flex;
-  gap: 10px;
-  margin-top: 26px;
-  width: 100%;
-}
-
-.adjust-chip {
-  flex: 1;
-  border: var(--bw) solid currentColor;
-  border-radius: 12px;
-  padding: 12px 0;
-  font-family: var(--font-display);
-  font-size: 18px;
-  background: none;
-  color: inherit;
-  cursor: pointer;
 }
 
 .next-set-card {
@@ -579,7 +603,7 @@ button {
   font-family: var(--font-display);
   font-size: 30px;
   cursor: pointer;
-  background: var(--white);
+  background: var(--surface);
 }
 
 .circle-btn.wide {
@@ -602,7 +626,7 @@ button {
   margin-top: 20px;
   background: var(--accent);
   color: var(--white);
-  border: var(--bw) solid var(--bg);
+  border: var(--bw) solid var(--on-fill);
   border-radius: var(--r-md);
   padding: 16px 18px;
   display: flex;
@@ -632,7 +656,7 @@ button {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  border: var(--bw) solid var(--bg);
+  border: var(--bw) solid var(--on-fill);
   border-radius: var(--r-md);
   padding: 14px 18px;
 }
@@ -653,13 +677,13 @@ button {
   left: 50%;
   bottom: calc(24px + env(safe-area-inset-bottom));
   transform: translateX(-50%);
-  background: var(--ink);
-  color: var(--bg);
+  background: var(--fill);
+  color: var(--on-fill);
   font: 700 13px var(--font-body);
   letter-spacing: 0.5px;
   padding: 12px 18px;
   border-radius: 10px;
-  border: 2px solid var(--bg);
+  border: 2px solid var(--on-fill);
   z-index: 100;
   opacity: 0;
   pointer-events: none;

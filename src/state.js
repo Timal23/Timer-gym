@@ -1,10 +1,15 @@
 const STORAGE_KEY = 'gymtimer:v1';
 const DEFAULT_WEIGHT = 20;
 
+function systemPrefersDark() {
+  return typeof matchMedia === 'function' && matchMedia('(prefers-color-scheme: dark)').matches;
+}
+
 function defaultState() {
   return {
     mode: 'Salle',
     level: 'int',
+    theme: systemPrefersDark() ? 'dark' : 'light',
     session: null,
     lastSummary: null,
     history: {
@@ -58,6 +63,23 @@ export function subscribe(fn) {
 
 export function todayStr() {
   return new Date().toISOString().slice(0, 10);
+}
+
+const THEME_COLORS = { light: '#f2f0eb', dark: '#14130f' };
+
+/** Reflect the current theme onto <html> and the PWA theme-color meta. */
+export function applyTheme(theme = state.theme) {
+  const t = theme === 'dark' ? 'dark' : 'light';
+  document.documentElement.dataset.theme = t;
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', THEME_COLORS[t]);
+}
+
+export function toggleTheme() {
+  const next = state.theme === 'dark' ? 'light' : 'dark';
+  setState({ theme: next });
+  applyTheme(next);
+  return next;
 }
 
 export function startSession(programId, mode, exercises) {
