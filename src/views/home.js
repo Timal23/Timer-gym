@@ -10,7 +10,7 @@ export default function renderHome(root) {
 
   const programs = PROGRAM_IDS.map((id) => {
     const meta = getProgramMeta(id);
-    const count = resolveExercises(state.mode, id, state.level).length;
+    const count = resolveExercises(state.mode, id, state.level, state.profile.equipment).length;
     return { id, ...meta, count };
   });
 
@@ -80,7 +80,7 @@ export default function renderHome(root) {
     btn.addEventListener('click', () => {
       const programId = btn.dataset.program;
       const current = getState();
-      const exercises = resolveExercises(current.mode, programId, current.level);
+      const exercises = resolveExercises(current.mode, programId, current.level, current.profile.equipment);
       startSession(programId, current.mode, exercises);
       navigate('/workout');
     });

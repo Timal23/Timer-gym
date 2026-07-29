@@ -1,4 +1,5 @@
 import { getState, setProfile, setOneRM } from '../state.js';
+import { EQUIPMENT_MAISON } from '../programs.js';
 import { fmtKg } from '../oneRm.js';
 import { bottomNavHTML, bindBottomNav } from '../components/bottomNav.js';
 
@@ -71,6 +72,20 @@ export default function renderProfile(root) {
               ${GOALS.map((g) => `<button class="tab ${g.id === p.goal ? 'active' : ''}" data-goal="${g.id}">${g.label}</button>`).join('')}
             </div>
           </div>
+
+          <div class="field">
+            <label>Matériel à la maison</label>
+            <div class="subtext" style="margin:-2px 0 8px">Décoche ce que tu n'as pas : le mode Maison ne te proposera que des exercices réalisables.</div>
+            <div class="equip-grid">
+              ${EQUIPMENT_MAISON.map((tag) => {
+                const on = p.equipment?.[tag];
+                return `<button class="equip-chip ${on ? 'checked' : ''}" data-equip="${tag}">
+                  <span class="equip-mark">${on ? '✓' : ''}</span>
+                  <span class="equip-name">${tag}</span>
+                </button>`;
+              }).join('')}
+            </div>
+          </div>
         </div>
 
         <div>
@@ -117,6 +132,15 @@ export default function renderProfile(root) {
   root.querySelectorAll('[data-goal]').forEach((btn) => {
     btn.addEventListener('click', () => {
       setProfile({ goal: btn.dataset.goal === state.profile.goal ? '' : btn.dataset.goal });
+      renderProfile(root);
+    });
+  });
+
+  root.querySelectorAll('[data-equip]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const tag = btn.dataset.equip;
+      const equipment = getState().profile.equipment || {};
+      setProfile({ equipment: { ...equipment, [tag]: !equipment[tag] } });
       renderProfile(root);
     });
   });

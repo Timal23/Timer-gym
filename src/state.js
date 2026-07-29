@@ -1,5 +1,12 @@
+import { EQUIPMENT_MAISON } from './programs.js';
+
 const STORAGE_KEY = 'gymtimer:v1';
 const DEFAULT_WEIGHT = 20;
+
+/** Par défaut, tout le matériel est considéré comme dispo (aucun filtrage). */
+function defaultEquipment() {
+  return Object.fromEntries(EQUIPMENT_MAISON.map((tag) => [tag, true]));
+}
 
 function systemPrefersDark() {
   return typeof matchMedia === 'function' && matchMedia('(prefers-color-scheme: dark)').matches;
@@ -13,7 +20,8 @@ function defaultProfile() {
     age: null,
     sex: '', // 'homme' | 'femme' | 'autre'
     goal: '', // 'force' | 'hypertrophie' | 'seche'
-    oneRM: {} // { [exerciseName]: kg }
+    oneRM: {}, // { [exerciseName]: kg }
+    equipment: defaultEquipment() // { [matériel]: bool } — filtre le mode Maison
   };
 }
 
@@ -45,7 +53,8 @@ function load() {
       profile: {
         ...base.profile,
         ...(parsed.profile || {}),
-        oneRM: { ...base.profile.oneRM, ...(parsed.profile?.oneRM || {}) }
+        oneRM: { ...base.profile.oneRM, ...(parsed.profile?.oneRM || {}) },
+        equipment: { ...base.profile.equipment, ...(parsed.profile?.equipment || {}) }
       }
     };
   } catch {

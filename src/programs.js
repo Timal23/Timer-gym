@@ -315,6 +315,171 @@ const PROGRAM = {
   }
 };
 
+/**
+ * Ancienne base d'exercices (avant le passage au programme par niveaux),
+ * récupérée pour élargir le pool de tirage aléatoire. Même format brut que
+ * PROGRAM (ex()), clé LEGACY[lieu][jour]. Les entrées d'abdos rejoignent le
+ * pool d'abdos ; les autres, le pool du groupe musculaire correspondant.
+ */
+const LEGACY = {
+  salle: {
+    push: [
+      ex('Développé couché', '4 × 12', R.s90, 'M'),
+      ex('Développé incliné haltères', '4 × 10', R.s90, 'M'),
+      ex('Développé militaire', '4 × 10', R.s90, 'M'),
+      ex('Élévations latérales', '3 × 15', R.s60, 'H'),
+      ex('Dips', '3 × 12', R.s75, 'H'),
+      ex('Extension triceps poulie', '3 × 15', R.s60, 'H'),
+      ex('Écarté poulie vis-à-vis', '3 × 15', R.s60, 'H'),
+      ex('Gainage', '3 × 45 s', R.s45, 'H')
+    ],
+    pull: [
+      ex('Tractions', '4 × 8', R.s90, 'F'),
+      ex('Rowing barre', '4 × 10', R.s90, 'M'),
+      ex('Tirage horizontal poulie', '3 × 12', R.s75, 'H'),
+      ex('Rowing haltère unilatéral', '3 × 10', R.s75, 'H'),
+      ex('Curl barre', '3 × 12', R.s60, 'H'),
+      ex('Curl marteau', '3 × 12', R.s60, 'H'),
+      ex('Face pull poulie', '3 × 15', R.s45, 'H')
+    ],
+    legs: [
+      ex('Squat', '4 × 10', R.p120, 'F'),
+      ex('Presse à cuisses', '4 × 12', R.s90, 'M'),
+      ex('Soulevé de terre roumain', '4 × 10', R.s90, 'M'),
+      ex('Fentes marchées', '3 × 12', R.s75, 'H'),
+      ex('Leg curl machine', '3 × 12', R.s60, 'H'),
+      ex('Leg extension machine', '3 × 15', R.s60, 'H'),
+      ex('Mollets debout machine', '4 × 15', R.s45, 'H'),
+      ex('Mollets assis machine', '3 × 15', R.s45, 'H'),
+      ex('Gainage latéral', '3 × 30 s', R.s45, 'H')
+    ]
+  },
+  maison: {
+    push: [
+      ex('Pompes', '4 × 15', R.s60, 'H'),
+      ex('Pompes diamant', '3 × 12', R.s60, 'H'),
+      ex('Développé au sol haltères', '4 × 12', R.s90, 'M'),
+      ex('Développé militaire haltères', '4 × 10', R.s90, 'M'),
+      ex('Développé militaire barre', '4 × 10', R.s90, 'M'),
+      ex('Élévations latérales haltères', '3 × 15', R.s60, 'H'),
+      ex('Dips sur chaise romaine', '3 × 12', R.s75, 'H'),
+      ex('Extension triceps haltère', '3 × 15', R.s60, 'H'),
+      ex('Pompes piké', '3 × 10-12', R.s60, 'H'),
+      ex('Pompes déclinées (pieds surélevés)', '4 × 12', R.s60, 'H'),
+      ex('Pompes archer', '3 × 8/côté', R.s75, 'H'),
+      ex('Gainage', '3 × 45 s', R.s45, 'H')
+    ],
+    pull: [
+      ex('Tractions', '4 × 8', R.s90, 'F'),
+      ex('Rowing haltère unilatéral', '4 × 10', R.s75, 'M'),
+      ex('Rowing barre', '4 × 10', R.s90, 'M'),
+      ex('Rowing australien (sous une table)', '4 × 12', R.s75, 'H'),
+      ex('Superman', '3 × 15', R.s45, 'H'),
+      ex('Extension dos au sol', '3 × 15', R.s45, 'H'),
+      ex('Curl barre EZ', '3 × 12', R.s60, 'H'),
+      ex('Curl haltères', '3 × 12', R.s60, 'H'),
+      ex('Curl kettlebell', '3 × 12', R.s60, 'H'),
+      ex('Curl australien supination (sous une table)', '3 × 10-12', R.s60, 'H')
+    ],
+    legs: [
+      ex('Squats', '4 × 15', R.s75, 'H'),
+      ex('Squats sautés', '3 × 15', R.s75, 'X'),
+      ex('Fentes marchées', '3 × 12', R.s75, 'H'),
+      ex('Fentes bulgares', '3 × 12', R.s75, 'H'),
+      ex('Squat gobelet haltère', '4 × 12', R.s90, 'M'),
+      ex('Squat gobelet kettlebell', '4 × 12', R.s90, 'M'),
+      ex('Soulevé de terre roumain haltères', '4 × 10', R.s90, 'M'),
+      ex('Soulevé de terre roumain barre', '4 × 10', R.s90, 'M'),
+      ex('Pont fessier (poids du corps)', '3 × 15', R.s60, 'H'),
+      ex('Nordic curl négatif', '3 × 6-8', R.s90, 'H'),
+      ex('Mollets debout', '4 × 20', R.s45, 'H'),
+      ex('Leg raises chaise romaine', '3 × 15', R.s45, 'H'),
+      ex('Gainage', '3 × 30 s', R.s45, 'H')
+    ]
+  },
+  pdc: {
+    push: [
+      ex('Pompes classiques', '4 × 15', R.s60, 'H'),
+      ex('Pompes surélevées (déclinées)', '3 × 12', R.s60, 'H'),
+      ex('Pompes diamant', '3 × 12', R.s60, 'H'),
+      ex('Pike push-ups', '3 × 12', R.s60, 'H'),
+      ex('Dips entre deux chaises', '3 × 12', R.s60, 'H'),
+      ex('Dips barres parallèles', '4 × 12', R.s75, 'M'),
+      ex('Gainage', '3 × 45 s', R.s45, 'H')
+    ],
+    pull: [
+      ex('Tractions', '4 × 8', R.s90, 'F'),
+      ex('Rowing australien (sous table)', '4 × 12', R.s75, 'H'),
+      ex('Superman', '3 × 15', R.s45, 'H'),
+      ex('Extension dos au sol', '3 × 15', R.s45, 'H')
+    ],
+    legs: [
+      ex('Squats', '4 × 20', R.s60, 'H'),
+      ex('Squats sautés', '3 × 15', R.s75, 'X'),
+      ex('Fentes marchées', '3 × 12', R.s75, 'H'),
+      ex('Fentes bulgares (chaise)', '3 × 12', R.s75, 'H'),
+      ex('Mollets debout', '4 × 20', R.s45, 'H'),
+      ex('Chaise murale', '3 × 40 s', R.s45, 'H'),
+      ex('Gainage', '3 × 30 s', R.s45, 'H')
+    ]
+  }
+};
+
+/**
+ * Groupe musculaire d'un exercice, déduit de son nom et du jour. Sert uniquement
+ * à équilibrer le tirage aléatoire (on remplace un exercice par un autre du même
+ * groupe). 'Abdos' est routé vers le pool d'abdos dédié.
+ */
+function classifyMuscle(name, programId) {
+  const n = name.toLowerCase();
+  if (/gainage|crunch|twist|roue|relev[eé]s?|leg raises|abdo|russian/.test(n)) return 'Abdos';
+  if (programId === 'push') {
+    if (/militaire|[eé]l[eé]vation|pik[eé]|pike|handstand|[eé]paule/.test(n)) return 'Épaules';
+    if (/triceps|dips|skull|barre au front|diamant|overhead|extension/.test(n)) return 'Triceps';
+    return 'Pecs';
+  }
+  if (programId === 'pull') {
+    if (/curl|chin-?\s?up|marteau|biceps/.test(n)) return 'Biceps';
+    return 'Dos';
+  }
+  // legs
+  if (/mollet/.test(n)) return 'Mollets';
+  if (/ischio|roumain|leg curl|nordic|good-?morning/.test(n)) return 'Ischios';
+  if (/hip thrust|fessier/.test(n)) return 'Fessiers';
+  return 'Quads';
+}
+
+const pickRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+/**
+ * Matériel possible à la maison (déclaré dans le profil). Le mode Salle n'est
+ * jamais filtré (accès complet), le mode PDC est du poids du corps.
+ */
+export const EQUIPMENT_MAISON = ['Haltères', 'Barre', 'Barre EZ', 'Barre de traction', 'Kettlebell', 'Chaise romaine'];
+
+/**
+ * Matériel requis par un exercice (une catégorie, ou null = poids du corps,
+ * toujours dispo). Déduit du nom. Utilisé seulement pour filtrer le pool Maison
+ * selon le matériel du profil.
+ */
+function equipmentFor(name) {
+  const n = name.toLowerCase();
+  if (/nordic/.test(n)) return null; // ancrage improvisé (canapé, aide) — pas de matériel
+  if (/kettlebell/.test(n)) return 'Kettlebell';
+  if (/traction|chin-?\s?up/.test(n)) return 'Barre de traction';
+  if (/barre ez|\bez\b|skull|barre au front/.test(n)) return 'Barre EZ';
+  if (/chaise romaine|hyperextension/.test(n)) return 'Chaise romaine';
+  if (/halt[eè]re/.test(n)) return 'Haltères';
+  if (/barre/.test(n)) return 'Barre';
+  return null;
+}
+
+/** L'exercice est-il réalisable avec le matériel déclaré ? (equipment nul = tout dispo) */
+function ownsEquipment(equipment, name) {
+  const tag = equipmentFor(name);
+  return tag == null || !equipment || equipment[tag];
+}
+
 /* --------------------------------- Adaptation ----------------------------- */
 
 const MODE_TO_LOCATION = { Salle: 'salle', Maison: 'maison', PDC: 'pdc' };
@@ -364,14 +529,92 @@ function toWorkoutExercise(raw, muscle) {
   };
 }
 
-export function resolveExercises(mode, programId, level) {
+/**
+ * Pool d'exercices principaux (niveau choisi + anciens exercices), regroupé par
+ * groupe musculaire, dédupliqué par nom. Les abdos sont exclus (pool séparé).
+ */
+function buildGroupedPool(location, programId, level, equipment) {
+  const filterEquip = location === 'maison';
+  const raws = [
+    ...(PROGRAM[location]?.[programId]?.[level] || []),
+    ...(LEGACY[location]?.[programId] || [])
+  ];
+  const groups = {};
+  const seen = new Set();
+  for (const raw of raws) {
+    if (seen.has(raw.name)) continue;
+    if (filterEquip && !ownsEquipment(equipment, raw.name)) continue;
+    const group = classifyMuscle(raw.name, programId);
+    if (group === 'Abdos') continue;
+    seen.add(raw.name);
+    (groups[group] ||= []).push(raw);
+  }
+  return groups;
+}
+
+/** Pool d'abdos : blocs ABS de tous les jours + abdos des anciens exercices du lieu. */
+function buildAbsPool(location, equipment) {
+  const filterEquip = location === 'maison';
+  const raws = [
+    ...Object.values(ABS).flatMap((block) => block.exercises),
+    ...['push', 'pull', 'legs'].flatMap((day) =>
+      (LEGACY[location]?.[day] || []).filter((raw) => classifyMuscle(raw.name, day) === 'Abdos')
+    )
+  ];
+  const seen = new Set();
+  return raws.filter((raw) => {
+    if (seen.has(raw.name)) return false;
+    if (filterEquip && !ownsEquipment(equipment, raw.name)) return false;
+    seen.add(raw.name);
+    return true;
+  });
+}
+
+/**
+ * Construit la liste d'une séance. L'échauffement est fixe. Les exercices
+ * principaux et les abdos sont tirés AU HASARD à chaque appel : pour chaque
+ * emplacement du programme (qui fixe le nombre d'exercices et la répartition
+ * musculaire du niveau), on pioche un exercice du même groupe dans le pool
+ * (niveau + anciens exercices), sans doublon. Relancer la même séance donne
+ * donc une sélection différente.
+ *
+ * `equipment` (map { matériel: bool } du profil) filtre le pool en mode Maison :
+ * les exercices dont le matériel n'est pas déclaré sont retirés. Si un groupe
+ * musculaire n'a plus aucun exercice réalisable, on pioche dans le reste du pool
+ * dispo (poids du corps) plutôt qu'imposer un exercice infaisable.
+ */
+export function resolveExercises(mode, programId, level, equipment = null) {
   const location = MODE_TO_LOCATION[mode];
-  const dayExercises = PROGRAM[location]?.[programId]?.[level] || [];
-  const absBlock = ABS[programId];
+  const template = PROGRAM[location]?.[programId]?.[level] || [];
+  const groups = buildGroupedPool(location, programId, level, equipment);
+  const allAvailable = Object.values(groups).flat();
+  const used = new Set();
+
+  const mainRaws = template.map((slot) => {
+    const group = classifyMuscle(slot.name, programId);
+    let candidates = (groups[group] || []).filter((raw) => !used.has(raw.name));
+    if (!candidates.length) candidates = allAvailable.filter((raw) => !used.has(raw.name));
+    // Dernier recours : autoriser un doublon réalisable plutôt qu'un exo infaisable.
+    if (!candidates.length) candidates = allAvailable;
+    const chosen = candidates.length ? pickRandom(candidates) : slot;
+    used.add(chosen.name);
+    return chosen;
+  });
+
+  const absCount = ABS[programId]?.exercises.length || 0;
+  const absPool = buildAbsPool(location, equipment);
+  const absRaws = [];
+  for (let i = 0; i < absCount; i++) {
+    const candidates = absPool.filter((raw) => !used.has(raw.name));
+    const src = candidates.length ? candidates : ABS[programId].exercises;
+    const chosen = pickRandom(src);
+    used.add(chosen.name);
+    absRaws.push(chosen);
+  }
 
   const warmup = (WARMUPS[programId] || []).map(toWarmupExercise);
-  const main = dayExercises.map((raw) => toWorkoutExercise(raw, TYPES[raw.type]?.label || ''));
-  const abs = absBlock ? absBlock.exercises.map((raw) => toWorkoutExercise(raw, 'Abdos')) : [];
+  const main = mainRaws.map((raw) => toWorkoutExercise(raw, TYPES[raw.type]?.label || ''));
+  const abs = absRaws.map((raw) => toWorkoutExercise(raw, 'Abdos'));
 
   return [...warmup, ...main, ...abs];
 }

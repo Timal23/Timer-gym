@@ -167,6 +167,50 @@ button {
   color: var(--white);
 }
 
+/* Équipement (profil) : puces cochables */
+.equip-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.equip-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: var(--bw) solid var(--ink);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+  font: 700 13px var(--font-body);
+  text-align: left;
+  cursor: pointer;
+}
+
+.equip-chip.checked {
+  background: var(--accent);
+  color: var(--white);
+  border-color: var(--accent);
+}
+
+.equip-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  border: 2px solid currentColor;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.equip-name {
+  line-height: 1.15;
+}
+
 /* Program cards */
 .card-list {
   display: flex;
@@ -715,6 +759,9 @@ button {
 .field-row .field {
   flex: 1;
   min-width: 0;
+  /* Labels à hauteur variable (certains passent sur 2 lignes) : on aligne les
+     champs sur le bas pour qu'ils restent à la même hauteur dans la rangée. */
+  justify-content: space-between;
 }
 
 .field > label {
