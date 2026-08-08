@@ -30,6 +30,7 @@ function defaultState() {
     mode: 'Salle',
     level: 'int',
     theme: systemPrefersDark() ? 'dark' : 'light',
+    accent: 'blue',
     profile: defaultProfile(),
     session: null,
     lastSummary: null,
@@ -107,6 +108,30 @@ export function toggleTheme() {
   setState({ theme: next });
   applyTheme(next);
   return next;
+}
+
+/** Couleurs d'appli disponibles (l'id pilote data-accent + les vars CSS). */
+export const ACCENTS = [
+  { id: 'blue', label: 'Bleu' },
+  { id: 'red', label: 'Rouge' },
+  { id: 'green', label: 'Vert' },
+  { id: 'orange', label: 'Orange' },
+  { id: 'gray', label: 'Gris' }
+];
+
+const ACCENT_IDS = ACCENTS.map((a) => a.id);
+
+/** Reflète la couleur d'accent choisie sur <html> (data-accent). */
+export function applyAccent(accent = state.accent) {
+  const a = ACCENT_IDS.includes(accent) ? accent : 'blue';
+  document.documentElement.dataset.accent = a;
+}
+
+export function setAccent(accent) {
+  const a = ACCENT_IDS.includes(accent) ? accent : 'blue';
+  setState({ accent: a });
+  applyAccent(a);
+  return a;
 }
 
 export function startSession(programId, mode, exercises) {

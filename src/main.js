@@ -1,5 +1,5 @@
 import './style.css';
-import { applyTheme } from './state.js';
+import { applyTheme, applyAccent } from './state.js';
 import { registerRoute, startRouter } from './router.js';
 import renderHome from './views/home.js';
 import renderWorkout from './views/workout.js';
@@ -16,4 +16,5 @@ registerRoute('/summary', renderSummary);
 registerRoute('/profile', renderProfile);
 
 applyTheme();
+applyAccent();
 startRouter();

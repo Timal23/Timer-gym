@@ -1,7 +1,15 @@
 :root {
   --bg: #f2f0eb;
   --ink: #0a0a0a;
+  /* Accent = couleur d'appli choisie par l'utilisateur (voir data-accent plus bas).
+     --accent : teinte pleine (texte, bordures, petits repères).
+     --accent-2 : teinte compagnon plus claire pour le dégradé.
+     --accent-grad : dégradé « un petit peu » marqué, appliqué aux grands aplats.
+     Les custom properties étant substituées à l'usage, --accent-grad se recalcule
+     automatiquement quand --accent/--accent-2 changent via data-accent. */
   --accent: #2e5bff;
+  --accent-2: #5b7cff;
+  --accent-grad: linear-gradient(140deg, var(--accent-2), var(--accent));
   --white: #ffffff;
   /* Semantic surfaces so the theme can flip without touching every rule.
      In light mode these equal the original hard-coded values, so the light
@@ -21,10 +29,25 @@
   --bg: #14130f;
   --ink: #f1ece1;
   --accent: #4f74ff;
+  --accent-2: #7a95ff;
   --surface: #211f19;
   --fill: #2b2922;
   --on-fill: #f1ece1;
 }
+
+/* ── Palettes d'accent (mode clair) ──
+   Chaque palette redéfinit --accent (plein) et --accent-2 (compagnon clair).
+   Le bleu reste la valeur par défaut de :root, donc pas de règle dédiée ici. */
+:root[data-accent='red'] { --accent: #e23b34; --accent-2: #f5726b; }
+:root[data-accent='green'] { --accent: #17a34a; --accent-2: #3fce74; }
+:root[data-accent='orange'] { --accent: #ea7317; --accent-2: #ffa14a; }
+:root[data-accent='gray'] { --accent: #55606f; --accent-2: #8b95a5; }
+
+/* ── Palettes d'accent (mode sombre) ── teintes un peu plus vives */
+:root[data-theme='dark'][data-accent='red'] { --accent: #ff5a52; --accent-2: #ff847d; }
+:root[data-theme='dark'][data-accent='green'] { --accent: #2fc76a; --accent-2: #5fe092; }
+:root[data-theme='dark'][data-accent='orange'] { --accent: #ff9838; --accent-2: #ffb867; }
+:root[data-theme='dark'][data-accent='gray'] { --accent: #8b95a5; --accent-2: #aab3c1; }
 
 html {
   color-scheme: light dark;
@@ -46,19 +69,25 @@ html, body {
 
 button {
   font-family: inherit;
+  /* Sans ça, iOS/Safari colore le texte des <button> non stylés en bleu système :
+     on force l'héritage de la couleur de l'app (--ink par défaut). */
+  color: inherit;
   -webkit-tap-highlight-color: transparent;
 }
 
 #app {
-  min-height: 100dvh;
+  /* vh en repli d'abord, dvh ensuite pour qu'il gagne là où il est supporté :
+     dvh suit la zone réellement visible (barres du navigateur incluses), ce qui
+     évite que le contenu « dépasse » sous le pli. */
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .screen {
   display: flex;
   flex-direction: column;
-  min-height: 100dvh;
   min-height: 100vh;
+  min-height: 100dvh;
   background: var(--bg);
   padding-top: env(safe-area-inset-top);
   padding-bottom: env(safe-area-inset-bottom);
@@ -70,7 +99,7 @@ button {
 }
 
 .screen--accent {
-  background: var(--accent);
+  background: var(--accent-grad);
   color: var(--white);
 }
 
@@ -163,7 +192,7 @@ button {
 }
 
 .tab.active {
-  background: var(--accent);
+  background: var(--accent-grad);
   color: var(--white);
 }
 
@@ -189,7 +218,7 @@ button {
 }
 
 .equip-chip.checked {
-  background: var(--accent);
+  background: var(--accent-grad);
   color: var(--white);
   border-color: var(--accent);
 }
@@ -233,7 +262,7 @@ button {
 }
 
 .program-card.is-accent {
-  background: var(--accent);
+  background: var(--accent-grad);
   color: var(--white);
 }
 
@@ -242,6 +271,13 @@ button {
   font-size: 36px;
   line-height: 0.9;
   text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* La première carte est déjà sur fond accentué : on garde son texte en blanc. */
+.program-card.is-accent .name,
+.program-card.is-accent .muscles {
+  color: var(--white);
 }
 
 .program-card .muscles {
@@ -249,6 +285,7 @@ button {
   letter-spacing: 0.5px;
   text-transform: uppercase;
   margin-top: 4px;
+  color: var(--accent);
 }
 
 .program-card .count {
@@ -340,7 +377,7 @@ button {
 }
 
 .btn-primary {
-  background: var(--accent);
+  background: var(--accent-grad);
   color: var(--white);
 }
 
@@ -415,7 +452,7 @@ button {
 }
 
 .set-panel {
-  background: var(--accent);
+  background: var(--accent-grad);
   color: var(--white);
   border: var(--bw) solid var(--ink);
   border-radius: var(--r-lg);
@@ -548,7 +585,7 @@ button {
 }
 
 .hold-panel {
-  background: var(--accent);
+  background: var(--accent-grad);
   color: var(--white);
   border: var(--bw) solid var(--ink);
   border-radius: var(--r-lg);
@@ -619,11 +656,12 @@ button {
   font-size: 22px;
   text-transform: uppercase;
   background: transparent;
+  color: var(--accent);
   cursor: pointer;
 }
 
 .preset-chip.active {
-  background: var(--accent);
+  background: var(--accent-grad);
   color: var(--white);
 }
 
@@ -648,6 +686,7 @@ button {
   font-size: 30px;
   cursor: pointer;
   background: var(--surface);
+  color: var(--accent);
 }
 
 .circle-btn.wide {
@@ -668,7 +707,7 @@ button {
 /* Summary */
 .streak-card {
   margin-top: 20px;
-  background: var(--accent);
+  background: var(--accent-grad);
   color: var(--white);
   border: var(--bw) solid var(--on-fill);
   border-radius: var(--r-md);
@@ -914,3 +953,54 @@ button {
   height: auto;
   font-size: 24px;
 }
+
+/* Choix de la couleur d'appli (profil) */
+.accent-grid {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.accent-swatch {
+  flex: 1;
+  min-width: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--ink);
+}
+
+.accent-swatch .dot {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-width: 54px;
+  border-radius: 50%;
+  border: var(--bw) solid var(--ink);
+}
+
+.accent-swatch.active .dot {
+  box-shadow: 0 0 0 3px var(--bg), 0 0 0 6px var(--ink);
+}
+
+.accent-swatch .nm {
+  font: 800 10px var(--font-body);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+.accent-swatch.active .nm {
+  opacity: 1;
+}
+
+/* Aperçus (mêmes dégradés que les palettes data-accent) */
+.dot--blue { background: linear-gradient(140deg, #5b7cff, #2e5bff); }
+.dot--red { background: linear-gradient(140deg, #f5726b, #e23b34); }
+.dot--green { background: linear-gradient(140deg, #3fce74, #17a34a); }
+.dot--orange { background: linear-gradient(140deg, #ffa14a, #ea7317); }
+.dot--gray { background: linear-gradient(140deg, #8b95a5, #55606f); }

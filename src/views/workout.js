@@ -53,7 +53,7 @@ export default function renderWorkout(root) {
         </div>
         <div>
           <span class="muscle-badge">${exercise.muscle}</span>
-          <div class="headline headline--sm" style="margin-top:10px">${exercise.name}</div>
+          <div class="headline headline--sm" style="margin-top:10px;color:var(--accent)">${exercise.name}</div>
           ${exercise.note ? `<div class="subtext">${exercise.note}</div>` : ''}
         </div>
         <div class="set-panel">

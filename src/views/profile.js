@@ -1,4 +1,4 @@
-import { getState, setProfile, setOneRM } from '../state.js';
+import { getState, setProfile, setOneRM, setAccent, ACCENTS } from '../state.js';
 import { EQUIPMENT_MAISON } from '../programs.js';
 import { fmtKg } from '../oneRm.js';
 import { bottomNavHTML, bindBottomNav } from '../components/bottomNav.js';
@@ -74,6 +74,18 @@ export default function renderProfile(root) {
           </div>
 
           <div class="field">
+            <label>Couleur de l'appli</label>
+            <div class="accent-grid">
+              ${ACCENTS.map(
+                (a) => `<button class="accent-swatch ${a.id === state.accent ? 'active' : ''}" data-accent="${a.id}" aria-label="${a.label}">
+                  <span class="dot dot--${a.id}"></span>
+                  <span class="nm">${a.label}</span>
+                </button>`
+              ).join('')}
+            </div>
+          </div>
+
+          <div class="field">
             <label>Matériel à la maison</label>
             <div class="subtext" style="margin:-2px 0 8px">Décoche ce que tu n'as pas : le mode Maison ne te proposera que des exercices réalisables.</div>
             <div class="equip-grid">
@@ -132,6 +144,13 @@ export default function renderProfile(root) {
   root.querySelectorAll('[data-goal]').forEach((btn) => {
     btn.addEventListener('click', () => {
       setProfile({ goal: btn.dataset.goal === state.profile.goal ? '' : btn.dataset.goal });
+      renderProfile(root);
+    });
+  });
+
+  root.querySelectorAll('[data-accent]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      setAccent(btn.dataset.accent);
       renderProfile(root);
     });
   });
